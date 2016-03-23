@@ -2,10 +2,10 @@ from board import Board
 from agents import MinimaxAgent
 from search import BoardTree
 
-SEARCH_DEPTH = 5
+SEARCH_DEPTH = 6
 
 class MastermindAgent:
-	def __init__(self, color):
+	def __init__(self):
 		self.color = None
 
 	def select_move(self, piece_matrix):

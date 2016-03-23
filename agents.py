@@ -1,5 +1,6 @@
 from search import BoardTree
 from board import Board
+import random
 
 class MinimaxAgent:
 	"""
@@ -29,10 +30,10 @@ class MinimaxAgent:
 		# Max Player Recursive Function (Red)
 		def max_value(state, depth):
 			if board_tree.is_goal_state(state) or depth == self.depth:
-				return self.evaluation_function(board_tree, state), None
+				return self.evaluation_function(board_tree, state), random.randint(0, state.j)
 
 			v = -float("inf")
-			best_action = None
+			best_action = random.randint(0, state.j)
 			for column, successor in board_tree.get_successors(state):
 				successor_value = value(successor, depth)[0]
 				if v < successor_value:
@@ -42,10 +43,10 @@ class MinimaxAgent:
 		# Min Player Recursive Function (Black)
 		def min_value(state, depth):
 			if board_tree.is_goal_state(state) or depth == self.depth:
-				return self.evaluation_function(board_tree, state), None
+				return self.evaluation_function(board_tree, state), random.randint(0, state.j)
 
 			v = float("inf")
-			best_action = None
+			best_action = random.randint(0, state.j)
 			for column, successor in board_tree.get_successors(state):
 				successor_value = value(successor, depth)[0]
 				if v > successor_value:
@@ -63,26 +64,31 @@ class MinimaxAgent:
 
 		This value is then used to compute the minimax value
 		of all parents of the input state by the MinimaxAgent.
+
+		TODO - if agent has a winning move, chooses stopping
+		opponent winning move instead of winning. (adjust weights)
 		"""
 		goal_state = board_tree.is_goal_state(state)
 
 		# Feature 1 - Checks for a winning state.
-		w1 = 1
 		f1 = 0
 		if goal_state:
-			if goal_state == -1 and board_tree.start_state.turn_player == 'b':
-				f1 = -float("inf")
-			elif goal_state == 1 and board_tree.start_state.turn_player == 'r':
-				f1 = float("inf")
-			elif goal_state == -1 and board_tree.start_state.turn_player == 'r':
-				f1 = -float("inf")
-			elif goal_state == 1 and board_tree.start_state.turn_player == 'b':
-				return float("inf")
+			f1 = float("inf")
 
 		# Feature 2
+		f2 = 0
+		possible_wins = [[3,4,5,7,5,4,3],
+						 [4,6,8,10,8,6,4],
+						 [5,8,11,13,11,8,5],
+						 [5,8,11,13,11,8,5],
+						 [4,6,8,10,8,6,4],
+						 [3,4,5,7,5,4,3]]
+		for i in range(len(state.piece_matrix)):
+			for j in range(len(state.piece_matrix[0])):
+				if state.piece_matrix[i][j] == 'r':
+					f2 = f2 + possible_wins[i][j]
+				elif state.piece_matrix[i][j] == 'b':
+					f2 = f2 - possible_wins[i][j]
 
-
-
-
-		return w1*f1
+		return f1 + f2
 

@@ -18,15 +18,14 @@ class BoardTree:
 		"""
 		Computes and returns all possible successor states of the
 		input state.
-
-		TODO - implement is_valid_move function to reduce overhead/make logic more correct
 		"""
 		successors = []
 		for column in range(len(state.piece_matrix[0])):
 			piece_matrix_copy = deep_copy(state.piece_matrix)
 			successor = Board(piece_matrix_copy, state.turn_player)
-			successor.make_move(column, state.turn_player)
-			successors.append((column, successor))
+			if successor.is_valid_move(column, state.turn_player):
+				successor.make_move(column, state.turn_player)
+				successors.append((column, successor))
 		return successors
 
 	def is_goal_state(self, state):

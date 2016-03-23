@@ -6,11 +6,12 @@ class Board:
 	"""
 	turn_swap = {'r' : 'b', 'b' : 'r'}
 
-	def __init__(self, piece_matrix=[], turn_player='r'):
+	def __init__(self, piece_matrix=[], turn_player='r', i=6, j=7):
+		self.i, self.j = i, j
 		if piece_matrix:
 			self.piece_matrix = piece_matrix
 		else:
-			self.piece_matrix = [[0 for _ in range(7)] for _ in range(6)]
+			self.piece_matrix = [[0 for _ in range(self.j)] for _ in range(self.i)]
 		self.turn_player = turn_player
 
 	def make_move(self, column, player):
@@ -24,7 +25,7 @@ class Board:
 		"""
 		if player != self.turn_player:
 			return "It Is Not Your Turn."
-		if column <= 6 or column >= 0:
+		if column <= self.i or column >= 0:
 			for i in range(len(self.piece_matrix)):
 				if self.piece_matrix[i][column] != 0:
 					if i == 0:
@@ -37,6 +38,16 @@ class Board:
 			return
 		return "Column # Not In Range."
 
+	def is_valid_move(self, column, player):
+		"""
+		Determines whether a given move is valid.
+		"""
+		if player != self.turn_player:
+			return False
+		for i in range(len(self.piece_matrix)):
+			if self.piece_matrix[i][column] == 0:
+				return True
+		return False
 
 	def place_piece(self, i, j, player):
 		"""
@@ -64,7 +75,7 @@ class Board:
 		"""
 		Resets board, and effectively restarts the game.
 		"""
-		self.piece_matrix = [[0 for _ in range(7)] for _ in range(6)]
+		self.piece_matrix = [[0 for _ in range(self.j)] for _ in range(6)]
 		self.turn_player = 'r'
 
 	def is_won(self):
@@ -183,20 +194,3 @@ class Board:
 				i, j = i - 1, j - 1
 
 		return False				
-
-	def play_game(self, agent1, agent2):
-		"""
-		Method that handles actual gameplay by two agents.
-		"""
-		agent1.color, agent2.color = 'r', 'b'
-		winner = self.is_won()
-		while not winner:
-			if self.turn_player == agent1.color:
-				column = agent1.select_move(self.piece_matrix)
-				self.make_move(column, agent1.color)
-			elif self.turn_player == agent2.color:
-				column = agent2.select_move(self.piece_matrix)
-				self.make_move(column, agent2.color)
-		return winner
-
-

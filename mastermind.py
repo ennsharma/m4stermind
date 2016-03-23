@@ -2,7 +2,7 @@ from board import Board
 from agents import MinimaxAgent
 from search import BoardTree
 
-SEARCH_DEPTH = 6
+SEARCH_DEPTH = 5
 
 class MastermindAgent:
 	def __init__(self):

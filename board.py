@@ -68,8 +68,13 @@ class Board:
 		"""
 		Prints the board in an orderly format to stdout.
 		"""
+
+		print()
+		print(' '.join(str(val).ljust(COL_WIDTH) for val in range(len(self.piece_matrix[0]))))
+		print("-"*(COL_WIDTH*len(self.piece_matrix[0]) + 3))
 		for i in range(len(self.piece_matrix)):
 			print(' '.join(str(val).ljust(COL_WIDTH) for val in self.piece_matrix[i]))
+		print()
 
 	def reset_board(self):
 		"""

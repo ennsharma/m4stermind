@@ -17,4 +17,5 @@ def play_game(agent1, agent2):
 			column = agent2.select_move(board.piece_matrix)
 			board.make_move(column, agent2.color)
 		winner = board.is_won()
+	board.display_board()
 	return winner

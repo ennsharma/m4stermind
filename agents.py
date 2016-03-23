@@ -73,7 +73,10 @@ class MinimaxAgent:
 		# Feature 1 - Checks for a winning state.
 		f1 = 0
 		if goal_state:
-			f1 = float("inf")
+			if state.turn_player == board_tree.start_state.turn_player:
+				f1 = float("inf")
+			elif state.turn_player == board_tree.start_state.turn_swap[board_tree.start_state.turn_player]:
+				f2 = -float("inf")
 
 		# Feature 2
 		f2 = 0
@@ -85,10 +88,9 @@ class MinimaxAgent:
 						 [3,4,5,7,5,4,3]]
 		for i in range(len(state.piece_matrix)):
 			for j in range(len(state.piece_matrix[0])):
-				if state.piece_matrix[i][j] == 'r':
-					f2 = f2 + possible_wins[i][j]
-				elif state.piece_matrix[i][j] == 'b':
+				if state.piece_matrix[i][j] == board_tree.start_state.turn_player:
 					f2 = f2 - possible_wins[i][j]
-
+				elif state.piece_matrix[i][j] == board_tree.start_state.turn_swap[board_tree.start_state.turn_player]:
+					f2 = f2 + possible_wins[i][j]
 		return f1 + f2
 

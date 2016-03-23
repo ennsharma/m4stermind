@@ -22,7 +22,7 @@ class MinimaxAgent:
 
 		# Base Case Function
 		def value(state, depth):
-			if state.turn_player == 'r':
+			if state.turn_player == board_tree.start_state.turn_player:
 				return max_value(state, depth+1)
 			else:
 				return min_value(state, depth+1)
@@ -64,9 +64,6 @@ class MinimaxAgent:
 
 		This value is then used to compute the minimax value
 		of all parents of the input state by the MinimaxAgent.
-
-		TODO - if agent has a winning move, chooses stopping
-		opponent winning move instead of winning. (adjust weights)
 		"""
 		goal_state = board_tree.is_goal_state(state)
 
@@ -74,9 +71,9 @@ class MinimaxAgent:
 		f1 = 0
 		if goal_state:
 			if state.turn_player == board_tree.start_state.turn_player:
-				f1 = float("inf")
+				f1 = -float("inf")
 			elif state.turn_player == board_tree.start_state.turn_swap[board_tree.start_state.turn_player]:
-				f2 = -float("inf")
+				f2 = float("inf")
 
 		# Feature 2
 		f2 = 0
@@ -89,8 +86,8 @@ class MinimaxAgent:
 		for i in range(len(state.piece_matrix)):
 			for j in range(len(state.piece_matrix[0])):
 				if state.piece_matrix[i][j] == board_tree.start_state.turn_player:
-					f2 = f2 - possible_wins[i][j]
-				elif state.piece_matrix[i][j] == board_tree.start_state.turn_swap[board_tree.start_state.turn_player]:
 					f2 = f2 + possible_wins[i][j]
+				elif state.piece_matrix[i][j] == board_tree.start_state.turn_swap[board_tree.start_state.turn_player]:
+					f2 = f2 - possible_wins[i][j]
 		return f1 + f2
 

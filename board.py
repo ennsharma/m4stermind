@@ -1,13 +1,27 @@
 COL_WIDTH = 4
 
 class Board:
+	"""
+	Class representation of the Connect 4 board.
+	"""
 	turn_swap = {'r' : 'b', 'b' : 'r'}
 
-	def __init__(self):
-		self.piece_matrix = [[0 for _ in range(7)] for _ in range(6)]
-		self.turn_player = 'r'
+	def __init__(self, piece_matrix=[], turn_player='r'):
+		if piece_matrix:
+			self.piece_matrix = piece_matrix
+		else:
+			self.piece_matrix = [[0 for _ in range(7)] for _ in range(6)]
+		self.turn_player = turn_player
 
 	def make_move(self, column, player):
+		"""
+		Method that places a piece corresponding to the given
+		player in the given column of the board. 
+
+		Outputs error messages if invalid player tries to make 
+		a move, the selected column is full, or the selected 
+		column is out of range.
+		"""
 		if player != self.turn_player:
 			return "It Is Not Your Turn."
 		if column <= 6 or column >= 0:
@@ -25,6 +39,11 @@ class Board:
 
 
 	def place_piece(self, i, j, player):
+		"""
+		Simply changes the current board object's
+		piece_matrix to reflect the newly placed
+		piece at coordinates (i, j).
+		"""
 		if player == 'b':
 			self.piece_matrix[i][j] = 'b'
 			return
@@ -35,14 +54,26 @@ class Board:
 			return "Not A Valid Color."
 
 	def display_board(self):
+		"""
+		Prints the board in an orderly format to stdout.
+		"""
 		for i in range(len(self.piece_matrix)):
 			print(' '.join(str(val).ljust(COL_WIDTH) for val in self.piece_matrix[i]))
 
 	def reset_board(self):
+		"""
+		Resets board, and effectively restarts the game.
+		"""
 		self.piece_matrix = [[0 for _ in range(7)] for _ in range(6)]
 		self.turn_player = 'r'
 
 	def is_won(self):
+		"""
+		Does thorough checking to determine whether or not the game
+		has been won. Checks rows, columns, and upper/lower diagonals.
+
+		TODO - compact into smaller package method
+		"""
 		won = False
 
 		# Check Rows
@@ -66,7 +97,7 @@ class Board:
 						return "The Black Player Has Won."
 
 		# Check Columns
-		for i in range(len(self.piece_matrix[0])):
+		for j in range(len(self.piece_matrix[0])):
 			consecutive, curr_color = 0, 'r'
 			for i in range(len(self.piece_matrix)):
 				if self.piece_matrix[i][j] == curr_color:
@@ -154,14 +185,17 @@ class Board:
 		return False				
 
 	def play_game(self, agent1, agent2):
+		"""
+		Method that handles actual gameplay by two agents.
+		"""
 		agent1.color, agent2.color = 'r', 'b'
 		winner = self.is_won()
 		while not winner:
 			if self.turn_player == agent1.color:
-				column = agent1.select_move(board)
+				column = agent1.select_move(self.piece_matrix)
 				self.make_move(column, agent1.color)
 			elif self.turn_player == agent2.color:
-				column = agent2.select_move(board)
+				column = agent2.select_move(self.piece_matrix)
 				self.make_move(column, agent2.color)
 		return winner
 
